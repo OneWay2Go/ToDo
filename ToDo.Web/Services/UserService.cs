@@ -34,7 +34,7 @@ public class UserService(ToDoContext context) : IUserService
         {
             return user;
         }
-        throw new ArgumentException(nameof(id), "There is no user with provided id");
+        throw new ArgumentException("There is no User with provided Id");
     }
 
     public async Task<User> GetUserByUsername(string username)
@@ -44,7 +44,7 @@ public class UserService(ToDoContext context) : IUserService
         {
             return user;
         }
-        throw new ArgumentException(nameof(username), "There is no user with provided username");
+        throw new ArgumentException("There is no User with provided Username");
     }
 
     public async Task<IList<User>> GetUsers()
@@ -65,9 +65,9 @@ public class UserService(ToDoContext context) : IUserService
                 context.Users.Update(user);
                 await context.SaveChangesAsync();
             }
-            throw new ArgumentException(nameof(dto.CurrentPassword), "Provided current password is invalid");
+            throw new ArgumentException(nameof(dto.CurrentPassword), "Provided Current Password is invalid");
         }
-        throw new ArgumentException(nameof(dto.Username), "There is no user with provided username");
+        throw new ArgumentException(nameof(dto.Username), "There is no User with provided Username");
     }
     public async System.Threading.Tasks.Task UpdateUserUsername(UpdateUserUsernameDTO dto)
     {
@@ -83,6 +83,6 @@ public class UserService(ToDoContext context) : IUserService
             }
             throw new ArgumentException(nameof(dto.CurrentUsername), "Provided current username is invalid");
         }
-        throw new ArgumentException(nameof(dto.CurrentUsername), "There is no user with provided username");
+        throw new ArgumentException(nameof(dto.CurrentUsername), "There is no User with provided Username");
     }
 }

@@ -1,50 +1,98 @@
 ﻿
+using Microsoft.EntityFrameworkCore;
+
 namespace ToDo.Web;
 
 public class TaskService(ToDoContext context) : ITaskService
 {
-    public System.Threading.Tasks.Task AddTask(AddTaskDTO dto)
+    public async System.Threading.Tasks.Task AddTask(AddTaskDTO dto)
     {
-        throw new NotImplementedException();
+        var task = new Task()
+        {
+            Name = dto.Name,
+            WhenToDo = dto.WhenToDo
+        };
+
+        await context.Tasks.AddAsync(task);
+        await context.SaveChangesAsync();
     }
 
-    public System.Threading.Tasks.Task CompleteTask(int id)
+    public async System.Threading.Tasks.Task CompleteTask(int id)
     {
-        throw new NotImplementedException();
+        var task = await context.Tasks.FirstOrDefaultAsync(t => t.Id == id);
+        if (task != null)
+        {
+            task.IsDone = true;
+
+            context.Tasks.Update(task);
+            await context.SaveChangesAsync();
+        }
+        throw new ArgumentException("There is no Task with provided Id");
     }
 
-    public System.Threading.Tasks.Task DeleteTask(int id)
+    public async System.Threading.Tasks.Task DeleteTask(int id)
     {
-        throw new NotImplementedException();
+        var task = await context.Tasks.FirstOrDefaultAsync(t => t.Id == id);
+        if (task != null)
+        {
+            context.Tasks.Remove(task);
+            await context.SaveChangesAsync();
+        }
+        throw new ArgumentException("There is no Task with provided Id");
     }
 
-    public Task<Task> GetTaskById(int id)
+    public async Task<Task> GetTaskById(int id)
     {
-        throw new NotImplementedException();
+        var task = await context.Tasks.FirstOrDefaultAsync(t => t.Id == id);
+        if (task != null)
+        {
+            return task;
+        }
+        throw new ArgumentException("There is no Task with provided Id");
     }
 
-    public Task<Task> GetTaskByName(string name)
+    public async Task<IList<Task>> GetTasks()
     {
-        throw new NotImplementedException();
+        List<Task> tasks = await context.Tasks.ToListAsync();
+        return tasks;
     }
 
-    public IList<Task> GetTasks()
+    public async System.Threading.Tasks.Task UncompleteTask(int id)
     {
-        throw new NotImplementedException();
+        var task = await context.Tasks.FirstOrDefaultAsync(t => t.Id == id && t.IsDone == false);
+        if (task != null)
+        {
+            task.IsDone = false;
+
+            context.Tasks.Update(task);
+            await context.SaveChangesAsync();
+        }
+        throw new ArgumentException("There is no Task with provided Id or Task is already uncomleted");
     }
 
-    public System.Threading.Tasks.Task UncompleteTask(int id)
+    public async System.Threading.Tasks.Task UpdateTaskName(UpdateTaskNameDTO dto)
     {
-        throw new NotImplementedException();
+        var task = await context.Tasks.FirstOrDefaultAsync(t => t.Id == dto.Id && t.Name != dto.NewName);
+        if (task != null)
+        {
+            task.Name = dto.NewName;
+
+            context.Tasks.Update(task);
+            await context.SaveChangesAsync();
+        }
+        throw new ArgumentException("There is no Task with provided Id or New Task Name is not new");
     }
 
-    public System.Threading.Tasks.Task UpdateTaskName(UpdateTaskNameDTO dto)
+    public async System.Threading.Tasks.Task UpdateTaskTime(UpdateTaskTimeDTO dto)
     {
-        throw new NotImplementedException();
-    }
+        var task = await context.Tasks.FirstOrDefaultAsync(t => t.Id == dto.Id && t.WhenToDo != dto.NewTime);
+        if (task != null)
+        {
+            task.WhenToDo = dto.NewTime;
 
-    public System.Threading.Tasks.Task UpdateTaskTime(UpdateTaskTimeDTO dto)
-    {
-        throw new NotImplementedException();
+            context.Tasks.Update(task);
+            await context.SaveChangesAsync();
+        }
+        throw new ArgumentException("There is no Task with provided Id or NewTime is not new");
     }
 }
