@@ -1,39 +1,88 @@
-﻿namespace ToDo.Web;
+﻿using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
+
+namespace ToDo.Web;
 
 public class UserService(ToDoContext context) : IUserService
 {
-    public System.Threading.Tasks.Task AddUser(AddUserDTO dto)
+    public async System.Threading.Tasks.Task AddUser(AddUserDTO dto)
     {
-        throw new NotImplementedException();
+        var user = new User()
+        {
+            Username = dto.Username,
+            Password = dto.Password
+        };
+
+        await context.Users.AddAsync(user);
+        await context.SaveChangesAsync();
     }
 
-    public System.Threading.Tasks.Task DeleteUser(string username)
+    public async System.Threading.Tasks.Task DeleteUser(string username)
     {
-        throw new NotImplementedException();
+        var user = await context.Users.FirstOrDefaultAsync(u => u.Username == username);
+        if(user != null)
+        {
+            context.Users.Remove(user);
+            await context.SaveChangesAsync();
+        }
     }
 
-    public Task<User> GetUserById(int id)
+    public async Task<User> GetUserById(int id)
     {
-        throw new NotImplementedException();
+        var user = await context.Users.FirstOrDefaultAsync(u => u.Id == id);
+        if(user != null)
+        {
+            return user;
+        }
+        throw new ArgumentException(nameof(id), "There is no user with provided id");
     }
 
-    public Task<User> GetUserByUsername(string username)
+    public async Task<User> GetUserByUsername(string username)
     {
-        throw new NotImplementedException();
+        var user = await context.Users.FirstOrDefaultAsync(u => u.Username == username);
+        if(user != null)
+        {
+            return user;
+        }
+        throw new ArgumentException(nameof(username), "There is no user with provided username");
     }
 
-    public IList<User> GetUsers()
+    public async Task<IList<User>> GetUsers()
     {
-        throw new NotImplementedException();
+        List<User> users = await context.Users.ToListAsync();
+        return users;
     }
 
-    public System.Threading.Tasks.Task UpdateUserPassword(UpdateUserPasswordDTO dto)
+    public async System.Threading.Tasks.Task UpdateUserPassword(UpdateUserPasswordDTO dto)
     {
-        throw new NotImplementedException();
-    }
+        var user = await context.Users.FirstOrDefaultAsync(u => u.Username == dto.Username);
+        if (user != null)
+        {
+            if(user.Password == dto.CurrentPassword)
+            {
+                user.Password = dto.NewPassword;
 
-    public System.Threading.Tasks.Task UpdateUserUsername(UpdateUserUsernameDTO dto)
+                context.Users.Update(user);
+                await context.SaveChangesAsync();
+            }
+            throw new ArgumentException(nameof(dto.CurrentPassword), "Provided current password is invalid");
+        }
+        throw new ArgumentException(nameof(dto.Username), "There is no user with provided username");
+    }
+    public async System.Threading.Tasks.Task UpdateUserUsername(UpdateUserUsernameDTO dto)
     {
-        throw new NotImplementedException();
+        var user = await context.Users.FirstOrDefaultAsync(u => u.Username == dto.CurrentUsername);
+        if (user != null)
+        {
+            if(user.Username == dto.CurrentUsername)
+            {
+                user.Username = dto.NewUsername;
+
+                context.Users.Update(user);
+                await context.SaveChangesAsync();
+            }
+            throw new ArgumentException(nameof(dto.CurrentUsername), "Provided current username is invalid");
+        }
+        throw new ArgumentException(nameof(dto.CurrentUsername), "There is no user with provided username");
     }
 }

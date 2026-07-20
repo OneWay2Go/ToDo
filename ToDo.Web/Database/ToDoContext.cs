@@ -7,6 +7,6 @@ public class ToDoContext : DbContext
     public ToDoContext(DbContextOptions options) : base(options)
     {}
 
-    DbSet<User> Users { get; set; }
-    DbSet<Task> Tasks { get; set; }
+    public DbSet<User> Users { get; set; }
+    public DbSet<Task> Tasks { get; set; }
 }
