@@ -44,7 +44,7 @@ public class UserService(ToDoContext context) : IUserService
         {
             return user;
         }
-        throw new ArgumentException("There is no User with provided Username");
+        return new User();
     }
 
     public async Task<IList<User>> GetUsers()
