@@ -1,4 +1,6 @@
-﻿namespace ToDo.Web;
+﻿using ToDo.Web.Entities;
+
+namespace ToDo.Web.Services.Interfacees;
 
 public interface ITokenProvider
 {

@@ -2,8 +2,10 @@
 using System.Text;
 using Microsoft.IdentityModel.JsonWebTokens;
 using Microsoft.IdentityModel.Tokens;
+using ToDo.Web.Entities;
+using ToDo.Web.Services.Interfacees;
 
-namespace ToDo.Web;
+namespace ToDo.Web.Services;
 
 public class TokenProvider(IConfiguration configuration) : ITokenProvider
 {

@@ -1,7 +1,10 @@
-﻿using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
+using ToDo.Web.Database;
+using ToDo.Web.DTOs;
+using ToDo.Web.Entities;
+using ToDo.Web.Services.Interfacees;
 
-namespace ToDo.Web;
+namespace ToDo.Web.Services;
 
 public class UserService(ToDoContext context) : IUserService
 {
@@ -34,7 +37,7 @@ public class UserService(ToDoContext context) : IUserService
         {
             return user;
         }
-        throw new ArgumentException("There is no User with provided Id");
+        return user;
     }
 
     public async Task<User> GetUserByUsername(string username)
@@ -44,7 +47,7 @@ public class UserService(ToDoContext context) : IUserService
         {
             return user;
         }
-        return new User();
+        return user;
     }
 
     public async Task<IList<User>> GetUsers()

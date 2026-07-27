@@ -1,9 +1,11 @@
-using ToDo.Web;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Microsoft.OpenApi.Models;
+using ToDo.Web.Database;
+using ToDo.Web.Services.Interfacees;
+using ToDo.Web.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 

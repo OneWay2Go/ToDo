@@ -1,4 +1,4 @@
-﻿namespace ToDo.Web;
+﻿namespace ToDo.Web.Entities;
 
 public class Task
 {

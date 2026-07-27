@@ -1,8 +1,8 @@
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using ToDo.Web;
+using ToDo.Web.DTOs;
+using ToDo.Web.Services.Interfacees;
 
-namespace MyApp.Namespace
+namespace ToDo.Web.Controllers
 {
     [Route("user")]
     [ApiController]
@@ -12,7 +12,7 @@ namespace MyApp.Namespace
         public async Task<IActionResult> Login(LoginDTO dto)
         {
             var user = await userService.GetUserByUsername(dto.Username);
-            if(user.Username == null)
+            if(user == null)
             {
                 return BadRequest("User does not exist");
             }

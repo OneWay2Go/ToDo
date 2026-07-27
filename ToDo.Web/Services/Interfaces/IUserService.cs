@@ -1,4 +1,7 @@
-﻿namespace ToDo.Web;
+﻿using ToDo.Web.DTOs;
+using ToDo.Web.Entities;
+
+namespace ToDo.Web.Services.Interfacees;
 
 public interface IUserService
 {

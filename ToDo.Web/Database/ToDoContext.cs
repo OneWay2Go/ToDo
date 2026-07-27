@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using ToDo.Web.Entities;
 
-namespace ToDo.Web;
+namespace ToDo.Web.Database;
 
 public class ToDoContext : DbContext
 {
@@ -8,5 +9,5 @@ public class ToDoContext : DbContext
     {}
 
     public DbSet<User> Users { get; set; }
-    public DbSet<Task> Tasks { get; set; }
+    public DbSet<Entities.Task> Tasks { get; set; }
 }
