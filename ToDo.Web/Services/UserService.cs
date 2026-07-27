@@ -8,7 +8,7 @@ namespace ToDo.Web.Services;
 
 public class UserService(ToDoContext context) : IUserService
 {
-    public async System.Threading.Tasks.Task AddUser(AddUserDTO dto)
+    public async System.Threading.Tasks.Task AddUserAsync(AddUserDTO dto)
     {
         var user = new User()
         {
@@ -20,9 +20,9 @@ public class UserService(ToDoContext context) : IUserService
         await context.SaveChangesAsync();
     }
 
-    public async System.Threading.Tasks.Task DeleteUser(string username)
+    public async System.Threading.Tasks.Task DeleteUserAsync(int id)
     {
-        var user = await context.Users.FirstOrDefaultAsync(u => u.Username == username);
+        var user = await context.Users.FirstOrDefaultAsync(u => u.Id == id);
         if(user != null)
         {
             context.Users.Remove(user);
@@ -30,7 +30,7 @@ public class UserService(ToDoContext context) : IUserService
         }
     }
 
-    public async Task<User> GetUserById(int id)
+    public async Task<User> GetUserByIdAsync(int id)
     {
         var user = await context.Users.FirstOrDefaultAsync(u => u.Id == id);
         if(user != null)
@@ -40,7 +40,7 @@ public class UserService(ToDoContext context) : IUserService
         return user;
     }
 
-    public async Task<User> GetUserByUsername(string username)
+    public async Task<User> GetUserByUsernameAsync(string username)
     {
         var user = await context.Users.FirstOrDefaultAsync(u => u.Username == username);
         if(user != null)
@@ -50,13 +50,13 @@ public class UserService(ToDoContext context) : IUserService
         return user;
     }
 
-    public async Task<IList<User>> GetUsers()
+    public async Task<IList<User>> GetUsersAsync()
     {
         List<User> users = await context.Users.ToListAsync();
         return users;
     }
 
-    public async System.Threading.Tasks.Task UpdateUserPassword(UpdateUserPasswordDTO dto)
+    public async System.Threading.Tasks.Task UpdateUserPasswordAsync(UpdateUserPasswordDTO dto)
     {
         var user = await context.Users.FirstOrDefaultAsync(u => u.Username == dto.Username);
         if (user != null)
@@ -72,7 +72,7 @@ public class UserService(ToDoContext context) : IUserService
         }
         throw new ArgumentException(nameof(dto.Username), "There is no User with provided Username");
     }
-    public async System.Threading.Tasks.Task UpdateUserUsername(UpdateUserUsernameDTO dto)
+    public async System.Threading.Tasks.Task UpdateUserUsernameAsync(UpdateUserUsernameDTO dto)
     {
         var user = await context.Users.FirstOrDefaultAsync(u => u.Username == dto.CurrentUsername);
         if (user != null)

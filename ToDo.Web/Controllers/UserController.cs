@@ -1,5 +1,9 @@
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ActionConstraints;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
 using ToDo.Web.DTOs;
+using ToDo.Web.Entities;
 using ToDo.Web.Services.Interfacees;
 
 namespace ToDo.Web.Controllers
@@ -11,7 +15,7 @@ namespace ToDo.Web.Controllers
         [HttpPost("login")]
         public async Task<IActionResult> Login(LoginDTO dto)
         {
-            var user = await userService.GetUserByUsername(dto.Username);
+            var user = await userService.GetUserByUsernameAsync(dto.Username);
             if(user == null)
             {
                 return BadRequest("User does not exist");
@@ -29,7 +33,7 @@ namespace ToDo.Web.Controllers
         [HttpPost("register")]
         public async Task<IActionResult> Register(RegisterDTO dto)
         {
-            var user = await userService.GetUserByUsername(dto.Username);
+            var user = await userService.GetUserByUsernameAsync(dto.Username);
             if(user.Username != null)
             {
                 return BadRequest("Username exists");
@@ -45,8 +49,70 @@ namespace ToDo.Web.Controllers
                 Username = dto.Username,
                 Password = dto.Password
             };
-            await userService.AddUser(newUser);
+            await userService.AddUserAsync(newUser);
 
+            return Ok();
+        }
+
+        [HttpGet("get-all")]
+        public ActionResult<List<User>> GetAll()
+        {
+            var users = userService.GetUsersAsync();
+            return Ok(users);
+        }
+
+        [HttpGet("get-by-id")]
+        public async Task<ActionResult<User>> GetByIdAsync(int id)
+        {
+            var user = await userService.GetUserByIdAsync(id);
+            if(user != null)
+            {
+                return Ok(user);
+            }
+            return BadRequest("There is no User with provided Id");
+        }
+
+        [HttpGet("get-by-username")]
+        public async Task<ActionResult<User>> GetByUsernameAsync(string username)
+        {
+            var user = await userService.GetUserByUsernameAsync(username);
+            if(user != null)
+            {
+                return Ok(user);
+            }
+            return BadRequest("There is no User with provided Username");
+        }
+
+        [HttpPut("update-password")]
+        public async Task<IActionResult> UpdatePasswordAsync(UpdateUserPasswordDTO dto)
+        {
+            try
+            {
+                await userService.UpdateUserPasswordAsync(dto);
+                return Ok();
+            }catch(Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
+        [HttpPut("update-username")]
+        public async Task<IActionResult> UpdateUsernameAsync(UpdateUserUsernameDTO dto)
+        {
+            try
+            {
+                await userService.UpdateUserUsernameAsync(dto);
+                return Ok();
+            }catch(Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
+        [HttpDelete("delete")]
+        public async Task<IActionResult> DeleteAsync(int id)
+        {
+            await userService.DeleteUserAsync(id);
             return Ok();
         }
     }
