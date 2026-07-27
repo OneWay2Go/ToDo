@@ -1,3 +1,4 @@
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using ToDo.Web.DTOs;
 using ToDo.Web.Entities;
@@ -52,9 +53,9 @@ namespace ToDo.Web.Controllers
         }
 
         [HttpGet("get-all")]
-        public ActionResult<List<User>> GetAll()
+        public async Task<ActionResult<List<User>>> GetAll()
         {
-            var users = userService.GetUsersAsync();
+            var users = await userService.GetUsersAsync();
             return Ok(users);
         }
 
