@@ -32,7 +32,7 @@ namespace ToDo.Web.Controllers
         public async Task<IActionResult> Register(RegisterDTO dto)
         {
             var user = await userService.GetUserByUsernameAsync(dto.Username);
-            if(user.Username != null)
+            if(user != null)
             {
                 return BadRequest("Username exists");
             }
